@@ -78,6 +78,16 @@ class Game:
 		print("Your next move (format X Y): ",end='')
 		x, y = [int(i) for i in input().split()]
 		
+		check=False
+		
+		if 0<=x<=self.board.width:
+			check=True
+		if 0<=x<=self.board.height:
+			check=True
+
+		if check==False:
+			exit("Lascia questa valle di lacrime")
+		
 		if self.board.is_bomb(x,y):
 			self.revealed = np.ones(shape=self.board.shape)
 			self.alive = False
