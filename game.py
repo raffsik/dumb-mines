@@ -36,6 +36,9 @@ class Board:
 	def is_empty(self,x,y):
 		return self.counts[x,y] == 0
 
+	def inside(self,x,y):
+		return (x >= 0) & (y >= 0) & (x < self.width) & (y < self.height)
+	
 	def load(self,file):
 		pass
 
@@ -83,10 +86,25 @@ class Game:
 			self.alive = False
 			self.game_over()
 		else:
-			self.revealed[x,y] = 1
-			
+			self.expand_from(x,y)
 
 		return self.alive
+	
+	def expand_from(self, x, y):
+		
+		# already checked
+		if (self.revealed[x,y] == 1) | (self.board.is_bomb(x,y)):
+			return
+		
+		self.revealed[x,y] = 1
+
+		dirs = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
+
+		if self.board.is_empty(x,y):
+			for (dx,dy) in dirs:
+				if self.board.inside(x+dx,y+dy):
+					self.expand_from(x+dx,y+dy)
+
 
 	def game_over(self):
 		print('#'*20)
