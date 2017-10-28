@@ -69,6 +69,14 @@ class Game:
 				else:
 					print('X', end=' ')
 			print()
+	
+	def check(self,x,y):    
+
+		c=False
+		
+		if 0<=x<self.board.width and 0<=y<self.board.height:
+			c=True
+		return c
 
 	def run(self):
 		
@@ -77,7 +85,13 @@ class Game:
 
 		print("Your next move (format X Y): ",end='')
 		x, y = [int(i) for i in input().split()]
-		
+		c=self.check(x,y)
+
+		while c==False:
+			print("Your next move (format X Y): ",end='')
+			x, y = [int(i) for i in input().split()]
+			c=self.check(x,y)
+			
 		if self.board.is_bomb(x,y):
 			self.revealed = np.ones(shape=self.board.shape)
 			self.alive = False
