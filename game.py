@@ -78,8 +78,16 @@ class Game:
 		print('#'*20)
 		self.print_board()
 
-		print("Your next move (format X Y): ",end='')
-		x, y = [int(i) for i in input().split()]
+		ok = True
+		while ok:
+			print("Your next move (format X Y): ",end='')
+			try:
+				x, y = [int(i) for i in input().split()]
+			except:
+				continue
+			if (0<=x<self.board.height and 0<=y<self.board.width):
+				ok = False
+
 		
 		if self.board.is_bomb(x,y):
 			self.revealed = np.ones(shape=self.board.shape)
@@ -87,6 +95,10 @@ class Game:
 			self.game_over()
 		else:
 			self.expand_from(x,y)
+			
+		if  np.all(np.logical_not(self.revealed)==self.board.bombs):
+			self.alive = False
+			self.game_win()	
 
 		return self.alive
 	
@@ -111,10 +123,22 @@ class Game:
 		self.print_board()
 
 		print('Enjoy getting blown :3')
+	
+	def game_win(self):
+		print('#'*20)
+		self.print_board()
+		t2 = datetime.now()
+		delta = t2-t1
+
+
+		print("You won in {} seconds!\nBaila como el Pipi".format(delta.seconds))
+
+	
 if __name__ == "__main__":
 	
 	game = Game()
 	game.start()
+	t1 = datetime.now()
 
 	while True:
 		if not game.run():
